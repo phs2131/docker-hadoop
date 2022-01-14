@@ -53,6 +53,14 @@ RUN set -x \
     && tar -xvf /tmp/hive.tar.gz -C /opt/ \
     && rm /tmp/hive.tar.gz*
 
+RUN ln -s /opt/apache-hive-$HIVE_VERSION-bin/conf /etc/hive
+
+RUN mkdir /opt/apache-hive-$HIVE_VERSION-bin/logs
+
+ENV HIVE_HOME=/opt/apache-hive-$HIVE_VERSION-bin
+ENV HIVE_CONF_DIR=/etc/hive
+ENV PATH $HIVE_HOME/bin/:$PATH
+
 ADD entrypoint.sh /entrypoint.sh
 
 RUN chmod a+x /entrypoint.sh

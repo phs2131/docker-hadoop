@@ -14,14 +14,10 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
       
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
 
-#RUN curl -O https://dist.apache.org/repos/dist/release/hadoop/common/KEYS
-ADD KEYS /KEYS
-
-RUN gpg --import KEYS
-
 #INSTALL HADOOP
+RUN curl -O dlcdn.apache.org/hadoop/common/KEYS
+RUN gpg --import KEYS
 ENV HADOOP_VERSION 3.2.2
-#ENV HADOOP_URL https://www.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
 ENV HADOOP_URL dlcdn.apache.org/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
 
 RUN set -x \
@@ -45,8 +41,10 @@ ENV PATH $HADOOP_HOME/bin/:$PATH
 
 #INSTALL HADOOP ECO
 #HIVE
+RUN curl -O dlcdn.apache.org/hive/KEYS
+RUN gpg --import KEYS
 ENV HIVE_VERSION 3.1.2
-ENV HIVE_URL https://dlcdn.apache.org/hive/hive-$HIVE_VERSION/apache-hive-$HIVE_VERSION-bin.tar.gz
+ENV HIVE_URL dlcdn.apache.org/hive/hive-$HIVE_VERSION/apache-hive-$HIVE_VERSION-bin.tar.gz
 
 RUN set -x \
     && curl -fSL "$HIVE_URL" -o /tmp/hive.tar.gz \

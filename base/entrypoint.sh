@@ -21,6 +21,8 @@ function configure() {
     local var
     local value
     
+    echo "Clearing $path contents"
+    sed -i '/property/d' $path
     echo "Configuring $module"
     for c in `printenv | perl -sne 'print "$1 " if m/^${envPrefix}_(.+?)=.*/' -- -envPrefix=$envPrefix`; do 
         name=`echo ${c} | perl -pe 's/___/-/g; s/__/@/g; s/_/./g; s/@/_/g;'`

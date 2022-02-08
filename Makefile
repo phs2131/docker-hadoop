@@ -9,6 +9,7 @@ build:
 	docker build -t nicholas/hadoop-resourcemanager:$(current_branch) ./resourcemanager
 	docker build -t nicholas/hadoop-nodemanager:$(current_branch) ./nodemanager
 	docker build -t nicholas/hadoop-historyserver:$(current_branch) ./historyserver
+	docker build -t nicholas/hadoop-eco-hive:$(current_branch) ./hive
 	docker build -t nicholas/hadoop-submit:$(current_branch) ./submit
 
 clean:
@@ -18,6 +19,7 @@ clean:
 	docker rmi nicholas/hadoop-resourcemanager:$(current_branch)
 	docker rmi nicholas/hadoop-nodemanager:$(current_branch)
 	docker rmi nicholas/hadoop-historyserver:$(current_branch)
+	docker rmi nicholas/hadoop-eco-hive:$(current_branch)
 	docker rmi nicholas/hadoop-submit:$(current_branch)
 
 wordcount:

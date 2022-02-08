@@ -39,28 +39,6 @@ ENV MULTIHOMED_NETWORK=1
 ENV USER=root
 ENV PATH $HADOOP_HOME/bin/:$PATH
 
-#INSTALL HADOOP ECO
-#HIVE
-RUN curl -O dlcdn.apache.org/hive/KEYS
-RUN gpg --import KEYS
-ENV HIVE_VERSION 3.1.2
-ENV HIVE_URL dlcdn.apache.org/hive/hive-$HIVE_VERSION/apache-hive-$HIVE_VERSION-bin.tar.gz
-
-RUN set -x \
-    && curl -fSL "$HIVE_URL" -o /tmp/hive.tar.gz \
-    && curl -fSL "$HIVE_URL.asc" -o /tmp/hive.tar.gz.asc \
-    && gpg --verify /tmp/hive.tar.gz.asc \
-    && tar -xvf /tmp/hive.tar.gz -C /opt/ \
-    && rm /tmp/hive.tar.gz*
-
-RUN ln -s /opt/apache-hive-$HIVE_VERSION-bin/conf /etc/hive
-
-RUN mkdir /opt/apache-hive-$HIVE_VERSION-bin/logs
-
-ENV HIVE_HOME=/opt/apache-hive-$HIVE_VERSION-bin
-ENV HIVE_CONF_DIR=/etc/hive
-ENV PATH $HIVE_HOME/bin/:$PATH
-
 ADD entrypoint.sh /entrypoint.sh
 
 RUN chmod a+x /entrypoint.sh

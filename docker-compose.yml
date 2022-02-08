@@ -40,6 +40,8 @@ services:
       SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864"
     env_file:
       - ./hadoop.env
+    depends_on:
+      - "namenode"
 
   nodemanager1:
     image: nicholas/hadoop-nodemanager:master
@@ -50,6 +52,8 @@ services:
       SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088"
     env_file:
       - ./hadoop.env
+    depends_on:
+      - "namenode"
   
   historyserver:
     image: nicholas/hadoop-historyserver:master
@@ -64,8 +68,39 @@ services:
       - hadoop_historyserver:/hadoop/yarn/timeline
     env_file:
       - ./hadoop.env
+    depends_on:
+      - "namenode"
+
+  hiveserver:
+    image: nicholas/hadoop-eco-hive:master
+    container_name: hiveserver
+    restart: always
+    ports:
+      - 10000:10000
+    environment:
+      TZ: "Asia/Seoul"
+      SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088"
+    env_file:
+      - ./hadoop.env
+    depends_on:
+      - "metastore-db"
+
+  metastore-db:
+    image: mariadb
+    container_name: metastore-db
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQLD_OPTS: "--skip-grant-tables"
+    volumes:
+      - hive_metastoredb:/var/lib/mysql 
+    depends_on:
+      - "resourcemanager"
   
 volumes:
   hadoop_namenode:
   hadoop_datanode:
   hadoop_historyserver:
+  hive_metastoredb:

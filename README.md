@@ -58,5 +58,31 @@ The available configurations are:
 * /etc/hadoop/httpfs-site.xml HTTPFS_CONF
 * /etc/hadoop/kms-site.xml KMS_CONF
 * /etc/hadoop/mapred-site.xml  MAPRED_CONF
+* /etc/hive/hive-site.xml  HIVE_CONF
 
 If you need to extend some other configuration file, refer to base/entrypoint.sh bash script.
+
+FOR Hive with MariaDB Metastore-DB:
+```
+mysql -u root
+mysql> flush privileges;
+mysql> alter user 'root'@'localhost' identified by 'root';
+```
+Restart MariaDB Container
+
+```
+hadoop dfs -mkdir /tmp
+hadoop dfs -mkdir -p /user/hive/warehouse
+hadoop dfs -chmod g+w /tmp
+hadoop dfs -chmod -R g+w /user
+```
+```
+mysql -u root -p
+mysql> create database metastore default character set utf8;
+mysql> create user 'hive'@'%' identified by 'hive';
+mysql> grant all privileges on metastore.* to 'hive'@'%';
+```
+```
+schematool -dbType mysql -initSchema
+```
+Check with "hive" or "beeline"
